@@ -150,3 +150,52 @@ export const userLogin = async (req, res) => {
     console.log(error.message);
   }
 };
+//--------------USER DETAILS-----------------//
+export const userDetails = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    const claim = jwt.verify(token, process.env.USERSECRETKEY);
+
+    const id = claim._id;
+    const userDetail = await userModel.findById(id);
+    if (userDetail) {
+      return res.status(200).json(userDetail);
+    } else {
+      return res.status(400).json({ message: "something went wrong" });
+    }
+  } catch (error) {
+    next(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+//-------------Usersave------//
+export const userSave = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    const claim = jwt.verify(token, process.env.USERSECRETKEY);
+
+    const id = claim._id;
+    console.log(req.body);
+
+    const userData = await userModel.updateOne(
+      {
+        _id: id,
+      },
+      { $set: { name: req.body.name, education: req.body.education } }
+    );
+    console.log(userData);
+
+    if (userData) {
+      res.status(200).json(userData);
+    } else {
+      res.status(400).json({
+        message: "some thing went wrong",
+      });
+    }
+  } catch (error) {
+    next(error);
+    console.log(error.message);
+  }
+};

@@ -91,7 +91,7 @@ const sendMail = async (name, email, id) => {
   }
 };
 
-//---user verification-------//
+//---tutor verification-------//
 
 export const Verification = async (req, res) => {
   try {
@@ -114,7 +114,7 @@ export const Verification = async (req, res) => {
   }
 };
 
-//-----user login---------//
+//-----tutor login---------//
 
 export const tutorLogin = async (req, res) => {
   try {
@@ -156,7 +156,7 @@ export const tutorLogin = async (req, res) => {
   }
 };
 
-//-----user login---------//
+//-----tutor login---------//
 
 export const tutorNotApprouved = async (req, res) => {
   try {
@@ -169,6 +169,54 @@ export const tutorNotApprouved = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error.message);
+  }
+};
+//-----------------tutor-Details----------//
+export const tutorDetails = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    const claim = jwt.verify(token, process.env.TUTORSECRETKEY);
+
+    const id = claim._id;
+    const tutorDetail = await tutorModel.findById(id);
+    if (tutorDetail) {
+      return res.status(200).json(tutorDetail);
+    } else {
+      return res.status(400).json({ message: "something went wrong" });
+    }
+  } catch (error) {
+    next(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+//-------------Tutorsave------//
+export const tutorSave = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    const claim = jwt.verify(token, process.env.TUTORSECRETKEY);
+
+    const id = claim._id;
+
+    const tutorData = await tutorModel.updateOne(
+      {
+        _id: id,
+      },
+      { $set: { name: req.body.name, education: req.body.qualification } }
+    );
+    console.log(tutorData);
+
+    if (tutorData) {
+      res.status(200).json(tutorData);
+    } else {
+      res.status(400).json({
+        message: "some thing went wrong",
+      });
+    }
+  } catch (error) {
+    next(error);
     console.log(error.message);
   }
 };

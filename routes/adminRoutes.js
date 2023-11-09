@@ -11,17 +11,16 @@ import {
   blockTutor,
   unblockTutor,
 } from "../controller/adminController.js";
-import { adminAuth } from "../middleware/Auth.js";
 //import { express } from "cookies";
 
 adminRoute.post("/login", adminLogin);
-adminRoute.get("/userList", adminAuth, userList);
-adminRoute.get("/tutorList", adminAuth, tutorNotApproved);
-adminRoute.patch("/blockUser", adminAuth, blockUser);
-adminRoute.patch("/unblockUser", adminAuth, unblockUser);
-adminRoute.put("/approve-tutor", adminAuth, approveTutor);
-adminRoute.put("/reject-tutor", adminAuth, rejectTutor);
-adminRoute.patch("/blockTutor", adminAuth, blockTutor);
-adminRoute.patch("/unblockTutor", adminAuth, unblockTutor);
+adminRoute.get("/userList", userList);
+adminRoute.get("/tutorList", tutorNotApproved);
+adminRoute.patch("/blockUser", blockUser);
+adminRoute.patch("/unblockUser", unblockUser);
+adminRoute.put("/approve-tutor", approveTutor);
+adminRoute.put("/reject-tutor", rejectTutor);
+adminRoute.patch("/blockTutor", blockTutor);
+adminRoute.patch("/unblockTutor", unblockTutor);
 
 export default adminRoute;
